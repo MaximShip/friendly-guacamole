@@ -68,12 +68,38 @@ h hello include int main n printf return stdio void world
 Задача 7
 Написать программу для нахождения файлов-дубликатов (имеющих 1 или более копий содержимого) по заданному пути (и подкаталогам).
 
+#!/bin/bash
+
+directory="$1"
+
+# Поиск дубликатов с использованием md5sum
+find "$directory" -type f -print0 | xargs -0 md5sum | sort | uniq -d -w 32 | sed -r 's/^[0-9a-f]*( )//' | while read -r duplicate; do
+  echo "Дубликат: $duplicate"
+  
 Задача 8
 Написать программу, которая находит все файлы в данном каталоге с расширением, указанным в качестве аргумента и архивирует все эти файлы в архив tar.
 
+extension="$1"
+archive_name="$2"
+
+files=$(find . -type f -name "*.$extension")
+
+tar -czvf "$archive_name.tar.gz" $files
+
+echo "Завершено!"
+
 Задача 9
 Написать программу, которая заменяет в файле последовательности из 4 пробелов на символ табуляции. Входной и выходной файлы задаются аргументами.
+input_file="$1"
+output_file="$2"
+sed 's/    /\t/g' "$input_file" > "$output_file"
+echo "Завершено!"
+
+
 
 Задача 10
 Написать программу, которая выводит названия всех пустых текстовых файлов в указанной директории. Директория передается в программу параметром.
+#!/bin/bash
 
+directory="$1"
+find "$directory" -type f -empty -exec file {} \; | grep "empty" | cut -d: -f1
