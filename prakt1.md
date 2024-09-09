@@ -72,7 +72,6 @@ h hello include int main n printf return stdio void world
 
 directory="$1"
 
-# Поиск дубликатов с использованием md5sum
 find "$directory" -type f -print0 | xargs -0 md5sum | sort | uniq -d -w 32 | sed -r 's/^[0-9a-f]*( )//' | while read -r duplicate; do
   echo "Дубликат: $duplicate"
   
