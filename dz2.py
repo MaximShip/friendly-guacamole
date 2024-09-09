@@ -23,9 +23,7 @@ def extract_dependencies(package_info):
 
     parsed_deps = []
     for dep in requires_dist:
-        # Split on first semicolon to remove environment markers
         dep_name = dep.split(";")[0].strip()
-        # Extract package name without version constraints
         dep_name = re.split('[<=>]', dep_name)[0].strip()
         if dep_name:
             parsed_deps.append(dep_name)
@@ -39,19 +37,18 @@ def build_dependency_graph(package_name, package_info, graph, visited):
 
     dependencies = extract_dependencies(package_info)
     for dep in dependencies:
-        if dep not in visited:  # Prevent making redundant requests
+        if dep not in visited:
             graph.append(f'"{package_name}" -> "{dep}";')
             try:
                 dep_info = fetch_package_info(dep)
                 build_dependency_graph(dep, dep_info, graph, visited)
             except SystemExit:
-                # Handle cases where the dependency package does not exist
                 continue
 
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python dependency_graph.py <package_name>")
+        print("python main.py и название пакета > graph.dot")
         sys.exit(1)
 
     package_name = sys.argv[1]
